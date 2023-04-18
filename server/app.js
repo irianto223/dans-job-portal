@@ -2,6 +2,8 @@ const express = require('express')
 const sequelize = require('./v1/config/database/sequelize')
 const userAPI = require('./v1/components/user/userAPI')
 const { createDefaultUser } = require('./v1/utils/common')
+const authAPI = require('./v1/components/auth/authAPI')
+
 
 // load env vars
 require('dotenv').config()
@@ -42,8 +44,9 @@ sequelize.authenticate().then(() => {
   console.error('Unable to connect to the database:', error)
 })
 
-// API endpoints
-app.use('/v1/users', userAPI)
+// API routes
+app.use('/v1/auth', authAPI)
+// app.use('/v1/users', userAPI)
 
 // listen to incoming request
 app.listen(PORT, () => {

@@ -17,8 +17,16 @@ const findOneByEmailOrUsername = async (email, username) => {
   })
 }
 
+const findOneByUsername = async (username) => {
+  return await User.findOne({
+    where: { username: username },
+    raw: true,
+  })
+}
+
 module.exports = {
   getList,
   create,
   findOneByEmailOrUsername,
+  findOneByUsername,
 }

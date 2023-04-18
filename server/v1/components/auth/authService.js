@@ -1,6 +1,8 @@
+const bcrypt = require('bcryptjs')
 const userRepository = require('../user/userRepository')
 const httpResponse = require('../../utils/httpResponse')
 const authHelper = require('./authHelper')
+const { throwUnprocessableEntity, throwNotFound, throwForbidden } = require('../../utils/error')
 
 const createUser = async (payload) => {
 
@@ -18,18 +20,51 @@ const createUser = async (payload) => {
 
     // validate existing username
     if (existingUser.email == user.email) {
-      throw new Error('email already exists')
+      return throwUnprocessableEntity('email already exists')
     }
 
     // validate existing email
     if (existingUser.username == user.username) {
-      throw new Error('username already exists')
+      return throwUnprocessableEntity('username already exists')
     }
   }
 
   return userRepository.create(user)
 }
 
+const auth = async (username, password) => {
+
+  // existing user
+  const existingUser = await userRepository.findOneByUsername(username)
+  if (!existingUser) {
+    return throwNotFound('username not found')
+  }
+
+  // password verification
+  const isPasswordMatch = bcrypt.compareSync(password, existingUser.password)
+  if (!isPasswordMatch) {
+    return throwForbidden('password not match')
+  }
+
+  // generate jwt token
+  const jwtPayload = {
+    sub: existingUser.id,
+    iat: Number(new Date()),
+  }
+  const token = authHelper.signJwt(jwtPayload, process.env.JWT_SECRET)
+
+  // setup response payload
+  const rawUser = { ...existingUser }
+  delete rawUser.password
+  const responsePayload = {
+    token,
+    user: rawUser,
+  }
+
+  return responsePayload
+}
+
 module.exports = {
   createUser,
+  auth,
 }
