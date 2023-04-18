@@ -1,15 +1,14 @@
 const express = require('express')
 const { Sequelize } = require('sequelize')
+const sequelize = require('./v1/config/database/sequelize')
+const userAPI = require('./v1/components/user/userAPI')
 
 // load env vars
 require('dotenv').config()
 const {
   PORT,
-  DB_USER,
-  DB_PASSWORD,
-  DB_HOST,
-  DB_PORT,
-  DB_NAME,
+  IS_DROP_ALL_TABLE,
+  NODE_ENV,
 } = process.env
 
 // init express
@@ -20,19 +19,25 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // sequelize
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`)
 sequelize.authenticate().then(() => {
-  console.log('Connection has been established successfully.');
+
+  console.log('Connection has been established successfully.')
+
+  const isDropAllTables = NODE_ENV != 'production' && IS_DROP_ALL_TABLE === 'true'
+  sequelize.sync({ force: isDropAllTables }).then(() => {
+    console.log('All models were synchronized successfully.')
+  }).catch(error => {
+    console.error('Fail to synchronize models:', error)
+  })
+
 }).catch(error => {
-  console.error('Unable to connect to the database:', error);
+  console.error('Unable to connect to the database:', error)
 })
 
 // API endpoints
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.use('/v1/users', userAPI)
 
 // listen to incoming request
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
