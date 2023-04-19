@@ -12,6 +12,7 @@ const createUser = async (payload) => {
     email: payload.email,
     username: payload.username,
     password: authHelper.hashPassword(payload.password),
+    role: payload.role,
   }
 
   const existingUser = await userRepository.findOneByEmailOrUsername(user.email, user.username)

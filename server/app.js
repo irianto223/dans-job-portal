@@ -1,7 +1,7 @@
 const express = require('express')
 const sequelize = require('./v1/config/database/sequelize')
 const userAPI = require('./v1/components/user/userAPI')
-const { createDefaultUser } = require('./v1/utils/common')
+const { createDefaultUser } = require('./v1/utils/seed')
 const authAPI = require('./v1/components/auth/authAPI')
 
 
@@ -31,13 +31,15 @@ sequelize.authenticate().then(() => {
     console.log('All models were synchronized successfully.')
   }).catch(error => {
     console.error('Fail to synchronize models:', error)
-  })
+  }).finally(() => {
 
-  // create default user
-  createDefaultUser().then(() => {
-    console.log('Default user created successfully.')
-  }).catch(err => {
-    console.log('Skip generate default user:', err?.message)
+    // create default user
+    createDefaultUser().then(() => {
+      console.log('Default user created successfully.')
+    }).catch(err => {
+      console.log('Skip generate default user:', err?.message)
+    })
+
   })
 
 }).catch(error => {

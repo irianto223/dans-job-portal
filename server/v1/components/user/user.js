@@ -8,20 +8,25 @@ const User = sequelize.define('User', {
     allowNull: false
   },
   lastName: {
-    type: DataTypes.STRING
-    // allowNull defaults to true
+    type: DataTypes.STRING,
   },
   email: {
     type: DataTypes.STRING,
-    // allowNull: false
+    allowNull: false,
   },
   username: {
     type: DataTypes.STRING,
-    // allowNull: false
+    allowNull: false,
   },
   password: {
     type: DataTypes.STRING,
-    // allowNull: false
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.ENUM,
+    values: ['SUPERADMIN', 'ADMIN', 'USER'],
+    defaultValue: 'USER',
+    allowNull: false,
   },
 }, {
   // Other model options go here
