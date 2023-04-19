@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+
+  dans-job-portal-be:
+    container_name: dans-job-portal-be
+    build: ./server
+    ports:
+      - 9000:9000
+    volumes:
+      - ./server:/app
+    env_file:
+      - ./server/.env
+    depends_on:
+      - dans-postgres
+    networks:
+      - network-dans
+
+  dans-postgres:
+    container_name: dans-postgres
+    image: postgres
+    ports:
+      - 5434:5432
+    volumes:
+      - ./data/dans-postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=dans-job-portal
+    networks:
+      - network-dans
+
+networks:
+  network-dans:
