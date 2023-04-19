@@ -1,23 +1,43 @@
 const axios = require('axios');
 const { throwInternalServerError } = require('../../utils/error');
+const { filterJobs } = require('./jobHelper');
 
-const find = async () => {
+const find = async ({
+  descriptionKeyword,
+  locationKeyword,
+  isFulltimeOnly,
+  page,
+  limit,
+}) => {
+
   return await axios({
     method: 'GET',
     url: process.env.DANS_API_BASE_URL + '/api/recruitment/positions.json',
   }).then((response) => {
-    return response?.data ?? []
+
+    let data = filterJobs({ data: response?.data ?? [], descriptionKeyword, locationKeyword, isFulltimeOnly })
+
+    // paginate
+    data = data.slice(limit * (page - 1), limit * page)
+
+    return data
   }).catch((err) => {
-    return throwInternalServerError('fail call 3rd party service')
+    return throwInternalServerError('fail call 3rd party service:', err)
   })
 }
 
-const count = async () => {
+const count = async ({
+  descriptionKeyword,
+  locationKeyword,
+  isFulltimeOnly,
+}) => {
   return await axios({
     method: 'GET',
     url: process.env.DANS_API_BASE_URL + '/api/recruitment/positions.json',
   }).then((response) => {
-    return response?.data?.length
+
+    return filterJobs({ data: response?.data ?? [], descriptionKeyword, locationKeyword, isFulltimeOnly })?.length
+
   }).catch((err) => {
     return throwInternalServerError('fail call 3rd party service:', err)
   })
