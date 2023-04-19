@@ -1,10 +1,10 @@
 const express = require('express')
+const cors = require('cors')
 const sequelize = require('./v1/config/database/sequelize')
 const userAPI = require('./v1/components/user/userAPI')
 const { createDefaultUser } = require('./v1/utils/seed')
 const authAPI = require('./v1/components/auth/authAPI')
 const jobAPI = require('./v1/components/job/jobAPI')
-
 
 // load env vars
 require('dotenv').config()
@@ -20,6 +20,7 @@ const app = express()
 // middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cors())
 
 // sequelize
 sequelize.authenticate().then(() => {

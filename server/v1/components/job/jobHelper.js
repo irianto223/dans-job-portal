@@ -7,15 +7,15 @@ const filterJobs = ({
   let filtered = [...data]
   filtered = filtered.filter(d => {
     return (
-      new RegExp(`${descriptionKeyword}`, 'i').test(d.company)
-      || new RegExp(`${descriptionKeyword}`, 'i').test(d.title)
-      || new RegExp(`${descriptionKeyword}`, 'i').test(d.description)
+      new RegExp(`${descriptionKeyword || ''}`, 'i').test(d.company)
+      || new RegExp(`${descriptionKeyword || ''}`, 'i').test(d.title)
+      || new RegExp(`${descriptionKeyword || ''}`, 'i').test(d.description)
     )
   })
 
   filtered = filtered.filter(d => {
     return (
-      new RegExp(`${locationKeyword}`, 'i').test(d.location)
+      new RegExp(`${locationKeyword || ''}`, 'i').test(d.location)
     )
   })
 
