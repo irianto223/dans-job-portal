@@ -13,18 +13,18 @@ const auth = async (req, res, next) => {
 
   try {
 
-    const data = await authService.auth(username, password)
-    return httpResponse.ok(res, data)
+    const result = await authService.auth(username, password)
+    return httpResponse.ok(res, result.data, result.meta)
 
   } catch (error) {
     if (error.name == NOT_FOUND) {
-      return httpResponse.notFound(res, null, null, error.message)
+      return httpResponse.notFound(res, undefined, undefined, error.message)
     }
     else if (error.name == FORBIDDEN) {
-      return httpResponse.forbidden(res, null, null, error.message)
+      return httpResponse.forbidden(res, undefined, undefined, error.message)
     }
     else {
-      return httpResponse.internalServerError(res, null, null, error.message)
+      return httpResponse.internalServerError(res, undefined, undefined, error.message)
     }
   }
 }

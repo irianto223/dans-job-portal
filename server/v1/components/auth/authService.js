@@ -62,7 +62,10 @@ const auth = async (username, password) => {
     user: rawUser,
   }
 
-  return responsePayload
+  return {
+    data: responsePayload,
+    meta: {},
+  }
 }
 
 module.exports = {

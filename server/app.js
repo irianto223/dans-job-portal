@@ -3,6 +3,7 @@ const sequelize = require('./v1/config/database/sequelize')
 const userAPI = require('./v1/components/user/userAPI')
 const { createDefaultUser } = require('./v1/utils/seed')
 const authAPI = require('./v1/components/auth/authAPI')
+const jobAPI = require('./v1/components/job/jobAPI')
 
 
 // load env vars
@@ -49,6 +50,7 @@ sequelize.authenticate().then(() => {
 // API routes
 app.use('/v1/auth', authAPI)
 // app.use('/v1/users', userAPI)
+app.use('/v1/jobs', jobAPI)
 
 // listen to incoming request
 app.listen(PORT, () => {
