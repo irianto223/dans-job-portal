@@ -5,6 +5,7 @@ A web-based job portal app.
 ##  How to run locally
 
 Create env file in **server** directory:
+
 ```$ cd server```
 
 ```$ cp .env.example .env```
