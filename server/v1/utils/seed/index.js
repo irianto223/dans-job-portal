@@ -1,24 +1,27 @@
 const authService = require('../../components/auth/authService')
 
-require('dotenv').config()
-
-const {
-  DEFAULT_ADMIN_FIRST_NAME,
-  DEFAULT_ADMIN_LAST_NAME,
-  DEFAULT_ADMIN_EMAIL,
-  DEFAULT_ADMIN_USERNAME,
-  DEFAULT_ADMIN_PASSWORD,
-} = process.env
-
 const createDefaultUser = () => {
-  return authService.createUser({
-    firstName: DEFAULT_ADMIN_FIRST_NAME,
-    lastName: DEFAULT_ADMIN_LAST_NAME,
-    email: DEFAULT_ADMIN_EMAIL,
-    username: DEFAULT_ADMIN_USERNAME,
-    password: DEFAULT_ADMIN_PASSWORD,
-    role: 'SUPERADMIN',
-  })
+
+  const addUsers = [
+    authService.createUser({
+      firstName: process.env.DEFAULT_ADMIN_FIRST_NAME,
+      lastName: process.env.DEFAULT_ADMIN_LAST_NAME,
+      email: process.env.DEFAULT_ADMIN_EMAIL,
+      username: process.env.DEFAULT_ADMIN_USERNAME,
+      password: process.env.DEFAULT_ADMIN_PASSWORD,
+      role: 'SUPERADMIN',
+    }),
+    authService.createUser({
+      firstName: process.env.DEFAULT_USER_FIRST_NAME,
+      lastName: process.env.DEFAULT_USER_LAST_NAME,
+      email: process.env.DEFAULT_USER_EMAIL,
+      username: process.env.DEFAULT_USER_USERNAME,
+      password: process.env.DEFAULT_USER_PASSWORD,
+      role: 'USER',
+    }),
+  ]
+
+  return Promise.all(addUsers)
 }
 
 module.exports = {

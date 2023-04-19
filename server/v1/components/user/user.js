@@ -32,6 +32,13 @@ const User = sequelize.define('User', {
   // Other model options go here
   tableName: 'users',
   timestamps: true,
+  scopes: {
+    withoutPassword: {
+      attributes: {
+        exclude: ['password'],
+      },
+    },
+  },
 })
 
 module.exports = User

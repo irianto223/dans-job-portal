@@ -49,7 +49,7 @@ sequelize.authenticate().then(() => {
 
 // API routes
 app.use('/v1/auth', authAPI)
-// app.use('/v1/users', userAPI)
+app.use('/v1/users', userAPI)
 app.use('/v1/jobs', jobAPI)
 
 // listen to incoming request
