@@ -24,15 +24,15 @@ const getJobs = async ({
     limit: currentLimit,
   })
 
-  result.meta.filtered = await jobRepo.count({
+  result.meta.filteredCount = await jobRepo.count({
     descriptionKeyword,
     locationKeyword,
     isFulltimeOnly,
   })
 
-  result.meta.total = await jobRepo.countAll()
+  result.meta.totalCount = await jobRepo.countAll()
   result.meta.currentPage = currentPage
-  result.meta.totalPage = Math.ceil(result.meta.total / currentLimit)
+  result.meta.totalPage = Math.ceil(result.meta.totalCount / currentLimit)
 
   return result
 }
