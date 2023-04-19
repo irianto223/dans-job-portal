@@ -37,6 +37,11 @@ const getJobs = async ({
   return result
 }
 
+const getJobById = async (id) => {
+  return jobRepo.findOneById(id)
+}
+
 module.exports = {
   getJobs,
+  getJobById,
 }

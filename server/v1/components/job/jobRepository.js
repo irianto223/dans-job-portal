@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { throwInternalServerError } = require('../../utils/error');
+const { throwInternalServerError, throwNotFound } = require('../../utils/error');
 const { filterJobs } = require('./jobHelper');
 
 const find = async ({
@@ -54,8 +54,24 @@ const countAll = async () => {
   })
 }
 
+const findOneById = async (id) => {
+  return await axios({
+    method: 'GET',
+    url: process.env.DANS_API_BASE_URL + '/api/recruitment/positions/' + id,
+  }).then((response) => {
+
+    if (!response.data?.id) {
+      return throwNotFound('Job not found.')
+    }
+
+    return response.data
+
+  })
+}
+
 module.exports = {
   find,
   count,
   countAll,
+  findOneById,
 }

@@ -1,6 +1,6 @@
 const jobService = require('./jobService')
 const httpResponse = require('../../utils/httpResponse')
-const { FORBIDDEN, BAD_REQUEST, UNAUTHORIZED } = require('../../utils/error')
+const { FORBIDDEN, BAD_REQUEST, UNAUTHORIZED, NOT_FOUND } = require('../../utils/error')
 
 const getJobs = async (req, res, next) => {
 
@@ -21,21 +21,46 @@ const getJobs = async (req, res, next) => {
   } catch (error) {
 
     if (error.name == BAD_REQUEST) {
-      return httpResponse.badRequest(res, null, null, error.message)
+      return httpResponse.badRequest(res, undefined, undefined, error.message)
     }
     else if (error.name == FORBIDDEN) {
-      return httpResponse.forbidden(res, null, null, error.message)
+      return httpResponse.forbidden(res, undefined, undefined, error.message)
     }
     else if (error.name == UNAUTHORIZED) {
-      return httpResponse.unauthorized(res, null, null, error.message)
+      return httpResponse.unauthorized(res, undefined, undefined, error.message)
     }
     else {
-      return httpResponse.internalServerError(res, null, null, error.message)
+      return httpResponse.internalServerError(res, undefined, undefined, error.message)
     }
 
   }
 }
 
+const getJobById = async (req, res, next) => {
+
+  try {
+
+    const detailJob = await jobService.getJobById(req.params.id)
+    return httpResponse.ok(res, detailJob)
+
+  } catch (error) {
+
+    if (error.name == NOT_FOUND) {
+      return httpResponse.notFound(res, undefined, undefined, error.message)
+    }
+    else if (error.name == FORBIDDEN) {
+      return httpResponse.forbidden(res, undefined, undefined, error.message)
+    }
+    else if (error.name == UNAUTHORIZED) {
+      return httpResponse.unauthorized(res, undefined, undefined, error.message)
+    }
+    else {
+      return httpResponse.internalServerError(res, undefined, undefined, error.message)
+    }
+  }
+}
+
 module.exports = {
   getJobs,
+  getJobById,
 }
